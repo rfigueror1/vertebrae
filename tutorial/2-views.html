@@ -26,15 +26,24 @@ var Comment = Backbone.Model.extend({
   initialize: function(message) {
     /* Set the initial values for `votes` to 0 and `message` to the message.
      * Remember to use setters when working with attributes! */
+     this.set({votes: 0, message: message});
   },
   votes: function() {
     /* Return the votes attribute on this model.
      * Remember to use a getter when working with attributes! */
+     this.get('votes');
   },
   upvote: function(){
     // Set the `votes` attribute to the current vote count plus one.
-  }
-  // Add a downvote function; don't forget the comma above.
+    var tempVotes = this.get('votes')+1;
+    this.set('votes', tempVotes);
+  },
+
+  downvote: function(){
+    // Set the `votes` attribute to the current vote count plus one.
+    var tempVotes = this.get('votes')-1;
+    this.set('votes', tempVotes);
+  },
 });
 
 /* - Backbone VIEW ------------------------------------------------------------
@@ -81,6 +90,8 @@ var CommentView = Backbone.View.extend({
   // Now that we have an event listener calling `render`, we must define it:
   render: function() {
     // As in step2, we define a template:
+    console.log(this.model.get('votes'));
+    console.log(this.model.get('message'));
     var html = [
       '<div>',
         '<span class="votes">',
@@ -107,7 +118,6 @@ var CommentView = Backbone.View.extend({
      *
      * Rendering now becomes as simple as setting the $el's html: */
     return this.$el.html(html);
-
     /* We're also returning the $el. It's already been modified and updated,
      * but it is not on the page yet.
      * In a couple lines, we will put it onto the page; then we can modify it
@@ -137,7 +147,8 @@ var commentView = new CommentView({ model: comment });
  */
 
 // Append the view to the page. This is why we returned html from `render`:
-// $('body').append(commentView.render());
+console.log(commentView.render());
+$('body').append(commentView.render());
 
 /* The number of votes should be 0.
  * We set that as the initial default value in the comment model.
